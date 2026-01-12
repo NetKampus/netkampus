@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # 1. Install pnpm (Automatically reads the version from your package.json)
       # This replaces your manual "corepack enable..." block and avoids version errors.
@@ -29,7 +29,7 @@ jobs:
 
       # 2. Setup Node + Automatic cache (Replaces your 3 manual cache steps)
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
           cache: "pnpm"
@@ -38,7 +38,7 @@ jobs:
 
       # 3. Turbo Cache (Now it actually reuses the cache between commits)
       - name: Cache Turbo
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .turbo
           # We use ref_name (branch) so that commits from the same branch share cache
