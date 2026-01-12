@@ -19,35 +19,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 1. Install pnpm (Automatically reads the version from your package.json)
+      # This replaces your manual "corepack enable..." block and avoids version errors.
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        # If you don't have "packageManager" in package.json, uncomment the line below:
+        # with:
+        #   version: 10.4.1
+
+      # 2. Setup Node + Automatic cache (Replaces your 3 manual cache steps)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "pnpm"
+          # This helps invalidate the cache if the lockfile changes
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Enable Corepack + pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@10.4.1 --activate
-          pnpm -v
-
-      - name: Get pnpm store path
-        id: pnpm-store
-        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
-
+      # 3. Turbo Cache (Now it actually reuses the cache between commits)
       - name: Cache Turbo
         uses: actions/cache@v4
         with:
           path: .turbo
-          key: turbo-${{ runner.os }}-${{ github.sha }}
+          # We use ref_name (branch) so that commits from the same branch share cache
+          key: turbo-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/pnpm-lock.yaml', 'turbo.json') }}
           restore-keys: |
+            turbo-${{ runner.os }}-${{ github.ref_name }}-
             turbo-${{ runner.os }}-
 
       - name: Install deps
