@@ -1,31 +1,54 @@
-# shadcn/ui monorepo template
+# NetKampus
 
-This template is for creating a monorepo with shadcn/ui.
+A platform for Universidad Nacional de Colombia (Bogotá) to discover student groups and events, RSVP, and avoid missing campus activities.
 
-## Usage
+## MVP Scope
+
+- Google sign-in restricted to UNAL email domains
+- Public/private groups with membership requests
+- Events with capacity and RSVP
+- Search & filters (basic)
+- Images via Supabase Storage
+- Secure access with Postgres RLS (Row Level Security) policies
+
+## Tech Stack
+
+- Next.js + React + TypeScript
+- Tailwind CSS + shadcn/ui
+- Supabase (Auth, Postgres, Storage)
+- Turborepo + pnpm workspaces
+- GitHub Actions (CI, Continuous Integration)
+
+## Monorepo Structure
+
+- `apps/web` — Next.js web app
+- `packages/ui` — shared UI components
+- `packages/eslint-config` — shared ESLint config
+- `packages/typescript-config` — shared TypeScript config
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 20.9
+- pnpm (recommended via Corepack)
+
+### Install & Run
 
 ```bash
-pnpm dlx shadcn@latest init
+pnpm install
+pnpm dev
 ```
 
-## Adding components
-
-To add components to your app, run the following command at the root of your `web` app:
+### Scripts
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+pnpm lint
+pnpm typecheck
+pnpm build
 ```
 
-This will place the ui components in the `packages/ui/src/components` directory.
+### Environment Variables
 
-## Tailwind
-
-Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
-
-## Using components
-
-To use the components in your app, import them from the `ui` package.
-
-```tsx
-import { Button } from "@workspace/ui/components/button"
-```
+Create apps/web/.env.local based on:
+`apps/web/.env.example`
