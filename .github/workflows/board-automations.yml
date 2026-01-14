@@ -1,0 +1,72 @@
+name: board automations
+on:
+  issues:
+    types: [opened, assigned]
+  pull_request:
+    types: [opened, ready_for_review, converted_to_draft, reopened]
+
+jobs:
+  # ----------------------------------------------------------------
+  # Case 1: Issue -> Ready
+  # Cover: issue assigned OR issue opened with assignees
+  # ----------------------------------------------------------------
+  issue_to_ready:
+    # Logic: It's an issue AND (just assigned OR (just opened AND has assignees))
+    if: >
+      github.event_name == 'issues' &&
+      (
+        github.event.action == 'assigned' ||
+        (github.event.action == 'opened' && toJson(github.event.issue.assignees) != '[]')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked Issue to Ready
+        uses: leonsteinhaeuser/project-beta-automations@v2.2.1
+        with:
+          gh_token: ${{ secrets.PROJECT_TOKEN }}
+          organization: NetKampus
+          project_id: 5
+          resource_node_id: ${{ github.event.issue.node_id }}
+          operation_mode: status
+          status_value: "Ready"
+
+  # ----------------------------------------------------------------
+  # Case 2: PR Draft -> Issue to In Progress
+  # ----------------------------------------------------------------
+  pr_draft_to_in_progress:
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked Issue to In progress
+        uses: leonsteinhaeuser/project-beta-automations@v2.2.1
+        with:
+          gh_token: ${{ secrets.PROJECT_TOKEN }}
+          organization: NetKampus
+          project_id: 5
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          operation_mode: status
+          move_related_issues: true # Esto busca el "Closes #123"
+          status_value: "In progress"
+
+  # ----------------------------------------------------------------
+  # Case 3: PR Ready -> Issue to In Review
+  # Cover: PR created directly (not draft) OR PR promoted from draft to ready
+  # ----------------------------------------------------------------
+  pr_to_in_review:
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked Issue to In review
+        uses: leonsteinhaeuser/project-beta-automations@v2.2.1
+        with:
+          gh_token: ${{ secrets.PROJECT_TOKEN }}
+          organization: NetKampus
+          project_id: 5
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          operation_mode: status
+          move_related_issues: true
+          status_value: "In review"
