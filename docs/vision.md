@@ -10,8 +10,8 @@ Provide a single place to discover student groups and events, RSVP, and track wh
 
 ## Target Users
 
-- Students who want to attend events
-- Student groups / organizers who publish events
+- Students who want to attend events.
+- Student groups / organizers who publish events.
 
 ## MVP Success Criteria
 
