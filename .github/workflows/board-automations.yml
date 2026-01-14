@@ -39,28 +39,15 @@ jobs:
       github.event.pull_request.draft == true
     runs-on: ubuntu-latest
     steps:
-      # NEW STEP: Get the Linked Issue Node ID
-      - name: Get Linked Issue Node ID
-        id: get-issue
-        env:
-          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
-        run: |
-          # Search for the linked issue using the GitHub CLI
-          ISSUE_ID=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json closingIssues --jq '.closingIssues[0].id')
-
-          # If there is no linked issue, this will be empty
-          echo "issue_node_id=$ISSUE_ID" >> $GITHUB_OUTPUT
-
-      # Modified action: We pass the Issue ID, NOT the PR ID
       - name: Move linked Issue to In progress
-        if: steps.get-issue.outputs.issue_node_id != '' # Only runs if an issue was found
         uses: leonsteinhaeuser/project-beta-automations@v2.2.1
         with:
           gh_token: ${{ secrets.PROJECT_TOKEN }}
           organization: NetKampus
           project_id: 5
-          resource_node_id: ${{ steps.get-issue.outputs.issue_node_id }}
+          resource_node_id: ${{ github.event.pull_request.node_id }}
           operation_mode: status
+          move_related_issues: true # Esto busca el "Closes #123"
           status_value: "In progress"
 
   # ----------------------------------------------------------------
@@ -73,22 +60,13 @@ jobs:
       github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      # Search for the linked issue using the GitHub CLI
-      - name: Get Linked Issue Node ID
-        id: get-issue
-        env:
-          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
-        run: |
-          ISSUE_ID=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json closingIssues --jq '.closingIssues[0].id')
-          echo "issue_node_id=$ISSUE_ID" >> $GITHUB_OUTPUT
-
       - name: Move linked Issue to In review
-        if: steps.get-issue.outputs.issue_node_id != ''
         uses: leonsteinhaeuser/project-beta-automations@v2.2.1
         with:
           gh_token: ${{ secrets.PROJECT_TOKEN }}
           organization: NetKampus
           project_id: 5
-          resource_node_id: ${{ steps.get-issue.outputs.issue_node_id }} # <--- TRUCO
+          resource_node_id: ${{ github.event.pull_request.node_id }}
           operation_mode: status
+          move_related_issues: true
           status_value: "In review"
