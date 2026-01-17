@@ -16,6 +16,14 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { ToggleGroup } from "@workspace/ui/components/toggle-group";
 import { Toggle } from "@workspace/ui/components/toggle";
 
+import {
+  Field,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+  FieldContent,
+} from "@workspace/ui/components/field";
+
 export default function Page() {
   return (
     <div className="flex items-center justify-center min-h-svh">
@@ -38,6 +46,14 @@ export default function Page() {
         <Toaster />
         <Switch />
         <Textarea placeholder="Textarea" />
+        <Field>
+          <FieldLabel>Field label</FieldLabel>
+          <FieldContent>
+            <Input placeholder="Field input" />
+            <FieldDescription>Descripción del campo</FieldDescription>
+            <FieldError errors={[{ message: "Este campo es requerido" }]} />
+          </FieldContent>
+        </Field>
         <ToggleGroup type="single">
           <Toggle value="1">Toggle 1</Toggle>
           <Toggle value="2">Toggle 2</Toggle>
