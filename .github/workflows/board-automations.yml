@@ -34,7 +34,7 @@ jobs:
   # Case 2: PR Draft -> Issue to In Progress
   # ----------------------------------------------------------------
   pr_move_linked_issues_only:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Move linked issues (do NOT add PR to Project)
