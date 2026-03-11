@@ -137,3 +137,50 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ─── Navbar animations ──────────────────────────────────────────────────── */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideFromCenterLeft {
+  from {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromCenterRight {
+  from {
+    opacity: 0;
+    transform: translateX(-400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-from-left {
+  animation: slideFromCenterLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-from-right {
+  animation: slideFromCenterRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
