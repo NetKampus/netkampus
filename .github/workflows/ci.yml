@@ -22,7 +22,7 @@ jobs:
       # 1. Install pnpm (Automatically reads the version from your package.json)
       # This replaces your manual "corepack enable..." block and avoids version errors.
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         # If you don't have "packageManager" in package.json, uncomment the line below:
         # with:
         #   version: 10.4.1
